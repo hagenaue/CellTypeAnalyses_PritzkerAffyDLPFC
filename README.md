@@ -5,3 +5,5 @@
 ###1Mol. Behavioral Neurosci. Inst., Univ. of Michigan, Ann Arbor, MI, USA;  2Genet., Univ. of Michigan, Ann Arbor, MI, USA;   3Univ. of California, Irvine, CA; 4HudsonAlpha Inst. for Biotech., Huntsville, AL, USA; 5Stanford, Palo Alto, CA, 6Cornell, New York, NY, USA
 
 ###Please note that this code is not easily generalizable - it primarily represents the documentation for all analyses used in our paper. For those of you who are interested in applying similar techniques to your own data, we do have a simplified, generalized version available at https://github.com/hagenaue/BrainInABlender.
+
+###The data used in these analyses are publically available on NCBI's GEO: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE92538.  Please note that the format for these data differs a little bit from the original files mentioned in the code (referred to as ""DLPFC_SubjectInfoUpdated_IrvineZT.csv", "dlpfc_avg2.txt"), but we are unable to release the original files used in the analysis due to the need to mask some of the identifying information for the subjects. I have also uploaded a concatenated version of the GEO data release to github: "dlpfc_avg2_wMappedIDs.csv".
