@@ -5,29 +5,34 @@
 
 #I need to output results from a basic linear model for comparison:
 GeneByCellTypeSubjVar2_Pvalues<-matrix(0, length(SignalSortedNoNA3[,1]), 9)
+GeneByCellTypeSubjVar2_Tstat<-matrix(0, length(SignalSortedNoNA3[,1]), 9)
 GeneByCellTypeSubjVar2_Betas<-matrix(0, length(SignalSortedNoNA3[,1]), 9)
 colnames(GeneByCellTypeSubjVar2_Pvalues)<-c("Intercept", "BrainPH", "AgonalFactor", "PMI", "Age", "Gender", "BP", "MDD", "SCHIZ")
 colnames(GeneByCellTypeSubjVar2_Betas)<-c("Intercept", "BrainPH", "AgonalFactor", "PMI", "Age", "Gender", "BP", "MDD", "SCHIZ")
+colnames(GeneByCellTypeSubjVar2_Tstat)<-c("Intercept", "BrainPH", "AgonalFactor", "PMI", "Age", "Gender", "BP", "MDD", "SCHIZ")
 row.names(GeneByCellTypeSubjVar2_Pvalues)<-row.names(SignalSortedNoNA3)
 row.names(GeneByCellTypeSubjVar2_Betas)<-row.names(SignalSortedNoNA3)
+row.names(GeneByCellTypeSubjVar2_Tstat)<-row.names(SignalSortedNoNA3)
 head(GeneByCellTypeSubjVar2_Pvalues)
 
 
 for(i in c(1:length(SignalSortedNoNA3[,1]))){
-	
-	temp<-summary.lm(lm(SignalSortedNoNA3[i,]~BrainPHCentered +AgonalFactorNoNA3 + PMICentered+ AgeCentered+ GenderNoNA3 + DiagnosisNoNA3))
-
-GeneByCellTypeSubjVar2_Betas[i,]<-temp$coefficients[,1]
-GeneByCellTypeSubjVar2_Pvalues[i,]<-temp$coefficients[,4]
-
+  
+  temp<-summary.lm(lm(SignalSortedNoNA3[i,]~BrainPHCentered +AgonalFactorNoNA3 + PMICentered+ AgeCentered+ GenderNoNA3 + DiagnosisNoNA3))
+  
+  GeneByCellTypeSubjVar2_Betas[i,]<-temp$coefficients[,1]
+  GeneByCellTypeSubjVar2_Tstat[i,]<-temp$coefficients[,3]
+  GeneByCellTypeSubjVar2_Pvalues[i,]<-temp$coefficients[,4]
+  
 }
 
 GeneByCellTypeSubjVar2_Pvalues2<-cbind(GeneByCellTypeSubjVar2_Pvalues, GeneNames)
 GeneByCellTypeSubjVar2_Betas2<-cbind(GeneByCellTypeSubjVar2_Betas, GeneNames)
-
+GeneByCellTypeSubjVar2_Tstat2<-cbind(GeneByCellTypeSubjVar2_Tstat, GeneNames)
 
 write.csv(GeneByCellTypeSubjVar2_Pvalues2, "GeneByCellTypeSubjVar2_Pvalues.csv")
 write.csv(GeneByCellTypeSubjVar2_Betas2, "GeneByCellTypeSubjVar2_Betas.csv")
+write.csv(GeneByCellTypeSubjVar2_Tstat2, "GeneByCellTypeSubjVar2_Tstat.csv")
 
 
 for (i in c(1:length(GeneByCellTypeSubjVar2_Pvalues[1,]))){
