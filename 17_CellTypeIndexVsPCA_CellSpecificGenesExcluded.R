@@ -111,3 +111,44 @@ dev.off()
 }		
 }
 
+#Making Nicer Figures:
+
+setwd("~/Documents/Affy/NoPC1correct/DLPFC circadian/MoreFigsForCellTypePaper/PCA wo CellTypeGenes")
+
+temp<-(CellTypeSpecificGenes_Master2_SignalNoNA3_NormBest_NoPrimaryOverlap_Mean[1,]+CellTypeSpecificGenes_Master2_SignalNoNA3_NormBest_NoPrimaryOverlap_Mean[2,])/2
+
+
+pdf("PC1vsAstrocyteEndothelial.pdf", width=4, height=4, pointsize=10)
+plot(SubjectPCA[,1]~temp, xlab="Combined Astrocyte & Endothelial Indices", ylab="PC1", col=1, font.lab=2, lwd=1, cex.lab=1.3, cex.axis=1)
+RegressionLine<-lm(SubjectPCA[,1]~temp)
+abline(RegressionLine, col="red", lwd=4)
+mtext(paste("p-value = ", print(formatC(signif(summary.lm(RegressionLine)$coefficients[8],digits=3), digits=3, flag="#")), sep=""), line=0.5, cex=1.5, font=2)
+mtext(paste("r-squared = ", round(summary.lm(RegressionLine)[8][[1]], digits=2), sep=""), line=2, cex=1.5, font=2)
+dev.off()
+
+
+pdf("PC1vsNeuron_All.pdf", width=4, height=4, pointsize=10)
+plot(SubjectPCA[,1]~CellTypeSpecificGenes_Master2_SignalNoNA3_NormBest_NoPrimaryOverlap_Mean[5,], xlab="Neuron (All) Index", ylab="PC1", col=1, font.lab=2, lwd=1, cex.lab=1.3, cex.axis=1)
+RegressionLine<-lm(SubjectPCA[,1]~CellTypeSpecificGenes_Master2_SignalNoNA3_NormBest_NoPrimaryOverlap_Mean[5,])
+abline(RegressionLine, col="dodgerblue3", lwd=4)
+mtext(paste("p-value = ", print(formatC(signif(summary.lm(RegressionLine)$coefficients[8],digits=3), digits=3, flag="#")), sep=""), line=0.5, cex=1.5, font=2)
+mtext(paste("r-squared = ", round(summary.lm(RegressionLine)[8][[1]], digits=2), sep=""), line=2, cex=1.5, font=2)
+dev.off()
+
+
+pdf("PC2vsNeuron_Projection.pdf", width=4, height=4, pointsize=10)
+plot(SubjectPCA[,2]~CellTypeSpecificGenes_Master2_SignalNoNA3_NormBest_NoPrimaryOverlap_Mean[7,], xlab="Projection Neuron Index", ylab="PC2", col=1, font.lab=2, lwd=1, cex.lab=1.3, cex.axis=1)
+RegressionLine<-lm(SubjectPCA[,2]~CellTypeSpecificGenes_Master2_SignalNoNA3_NormBest_NoPrimaryOverlap_Mean[7,])
+abline(RegressionLine, col="dodgerblue3", lwd=4)
+mtext(paste("p-value = ", print(formatC(signif(summary.lm(RegressionLine)$coefficients[8],digits=3), digits=3, flag="#")), sep=""), line=0.5, cex=1.5, font=2)
+mtext(paste("r-squared = ", round(summary.lm(RegressionLine)[8][[1]], digits=2), sep=""), line=2, cex=1.5, font=2)
+dev.off()
+
+pdf("PC2vsOligodendrocyte.pdf", width=4, height=4, pointsize=10)
+plot(SubjectPCA[,2]~CellTypeSpecificGenes_Master2_SignalNoNA3_NormBest_NoPrimaryOverlap_Mean[8,], xlab="Oligodendrocyte Index", ylab="PC2", col=1, font.lab=2, lwd=1, cex.lab=1.3, cex.axis=1)
+RegressionLine<-lm(SubjectPCA[,2]~CellTypeSpecificGenes_Master2_SignalNoNA3_NormBest_NoPrimaryOverlap_Mean[8,])
+abline(RegressionLine, col="red", lwd=4)
+mtext(paste("p-value = ", print(formatC(signif(summary.lm(RegressionLine)$coefficients[8],digits=3), digits=3, flag="#")), sep=""), line=0.5, cex=1.5, font=2)
+mtext(paste("r-squared = ", round(summary.lm(RegressionLine)[8][[1]], digits=2), sep=""), line=2, cex=1.5, font=2)
+dev.off()
+
