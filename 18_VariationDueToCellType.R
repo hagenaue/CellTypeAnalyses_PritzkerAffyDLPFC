@@ -307,3 +307,112 @@ dev.off()
 png("Histogram_AdjRsquared_SubjVar3celltypes.png")
 hist(GeneByCellTypeSubjVar_RSquared[,2], col=3, xlab="Adjusted R-squared", main="Linear Model with just subject variables & 3 cell types")
 
+
+################################################
+
+#Later, I went back and re-did these analyses using only the genes that are not included in the cell type specific gene expression database.
+#(in order to avoid circularity)
+
+
+
+#Estimating how much variation tends to be accounted for by cell type using only the genes in the dataset that are not in the cell type specific gene list:
+
+setwd("~/Documents/Affy/NoPC1correct/DLPFC circadian/MoreFigsForCellTypePaper/VarianceExplained wo CellTypeGenes")
+
+GeneByCellTypeSubjVar_RSquared<-matrix(0, length(SignalSortedNoNA3NoCellTypeGenes[,1]), 2)
+colnames(GeneByCellTypeSubjVar_RSquared)<-c("R-squared", "AdjRsquared")
+row.names(GeneByCellTypeSubjVar_RSquared)<-row.names(SignalSortedNoNA3NoCellTypeGenes)
+
+head(GeneByCellTypeSubjVar_RSquared)
+
+# #Just Cell Type:
+for(i in c(1:length(SignalSortedNoNA3NoCellTypeGenes[,1]))){
+	
+temp<-summary.lm(lm(SignalSortedNoNA3NoCellTypeGenes[i,]~CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Astrocyte+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Endothelial+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Microglia+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Mural+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Neuron_All+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Neuron_Interneuron+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Neuron_Projection+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Oligodendrocyte+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$RBC))
+ 
+GeneByCellTypeSubjVar_RSquared[i,1]<-temp$r.squared
+GeneByCellTypeSubjVar_RSquared[i,2]<-temp$adj.r.squared
+
+}
+
+mean(GeneByCellTypeSubjVar_RSquared[,1])
+ #[1] 0.2975733
+mean(GeneByCellTypeSubjVar_RSquared[,2])
+# #[1]  0.2545676
+
+#Just the most prevalent (non-multicollinear) Cell Types:
+for(i in c(1:length(SignalSortedNoNA3NoCellTypeGenes[,1]))){
+  
+  temp<-summary.lm(lm(SignalSortedNoNA3NoCellTypeGenes[i,]~CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Astrocyte+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Microglia+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Neuron_Interneuron+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Neuron_Projection+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Oligodendrocyte))
+  
+  GeneByCellTypeSubjVar_RSquared[i,1]<-temp$r.squared
+  GeneByCellTypeSubjVar_RSquared[i,2]<-temp$adj.r.squared
+  
+}
+
+GeneByCellTypeSubjVar_RSquared2<-cbind(GeneByCellTypeSubjVar_RSquared, GeneNames)
+                                       
+write.csv(GeneByCellTypeSubjVar_RSquared2, "GeneByCellTypeSubjVar_RSquared2_Mostprevalent.csv.csv")
+
+png("Histogram_Rsquared_5PrevalentCellTypes.png")
+hist(GeneByCellTypeSubjVar_RSquared[,1], col=2, xlab="R-squared", main="Linear Model with 5 Most Prevalent Cell Types")
+dev.off()
+
+#prettier version:
+pdf("Histogram_Rsquared_5celltypes.pdf", width=4, height=4, pointsize=10)
+hist(GeneByCellTypeSubjVar_RSquared[,1], col=2, xlab="R-squared", xlim=c(0,1), main="Linear Model with Five Prevalent Cell Types", font.lab=2, lwd=1, cex.lab=1.3, cex.axis=1)
+dev.off()
+
+#Just Astrocyte and Projection Neuron Indices:
+
+for(i in c(1:length(SignalSortedNoNA3NoCellTypeGenes[,1]))){
+  temp<-summary.lm(lm(SignalSortedNoNA3NoCellTypeGenes[i,]~CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Astrocyte+CellTypeIndices_NoNA3_NormBestNoPrimaryOverlap$Neuron_Projection))
+    GeneByCellTypeSubjVar_RSquared[i,1]<-temp$r.squared
+    GeneByCellTypeSubjVar_RSquared[i,2]<-temp$adj.r.squared
+  
+}
+
+mean(GeneByCellTypeSubjVar_RSquared[,1])
+#[1] 0.1670327
+mean(GeneByCellTypeSubjVar_RSquared[,2])
+#[1] 0.1562149
+
+#Just subject variables:
+
+for(i in c(1:length(SignalSortedNoNA3NoCellTypeGenes[,1]))){
+	
+	temp<-summary.lm(lm(SignalSortedNoNA3NoCellTypeGenes[i,]~BrainPHNoNA3 +AgonalFactorNoNA3 + HoursFinalCorrectedNoNA3+ AgeNoNA3+ GenderNoNA3 + DiagnosisNoNA3))
+
+GeneByCellTypeSubjVar_RSquared[i,1]<-temp$r.squared
+GeneByCellTypeSubjVar_RSquared[i,2]<-temp$adj.r.squared
+
+}
+
+mean(GeneByCellTypeSubjVar_RSquared[,1])
+[1] 0.1169566
+median(GeneByCellTypeSubjVar_RSquared[,1])
+[1] 0.09576344
+sd(GeneByCellTypeSubjVar_RSquared[,1])
+[1] 0.07986243
+#The results don't change much in comparison to analyzing the full dataset.
+
+mean(GeneByCellTypeSubjVar_RSquared[,2])
+[1] 0.06922453
+
+
+
+png("Histogram_Rsquared_SubjVar.png")
+hist(GeneByCellTypeSubjVar_RSquared[,1], col=2, xlab="R-squared", xlim=c(0,1), main="Linear Model with Just Subject Variables")
+dev.off()
+
+png("Histogram_AdjRsquared_SubjVar.png")
+hist(GeneByCellTypeSubjVar_RSquared[,2], col=3, xlab="Adjusted R-squared", xlim=c(0,1), main="Linear Model with Just Subject Variables")
+dev.off()
+
+
+#Let's make a prettier version of this:
+
+pdf("Histogram_Rsquared_SubjVar.pdf", width=4, height=4, pointsize=10)
+hist(GeneByCellTypeSubjVar_RSquared[,1], col=2, xlab="R-squared", xlim=c(0,1), main="Linear Model with Six Subject Variables", font.lab=2, lwd=1, cex.lab=1.3, cex.axis=1)
+dev.off()
+
